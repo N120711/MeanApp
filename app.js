@@ -1,10 +1,5 @@
-var app = angular.module('flapperNews',['ui.router']);
-  app.factory('posts',[function(){
-    var o ={
-      posts:[]
-    };
-    return o;
-  }]);
+var app = angular.module('flapperNews', ['ui.router'])
+
   app.config(['$stateProvider','$urlRouterProvider',function($stateProvider,$urlRouterProvider){
 
   $stateProvider
@@ -21,10 +16,17 @@ var app = angular.module('flapperNews',['ui.router']);
     $urlRouterProvider.otherwise('home');
 
   }]);
+  app.factory('posts',[function(){
+    var o ={
+      posts:[{title:'hello',link:'',upvotes:0}]
+    };
+    return o;
+  }]);
 
-  app.controller('mainCtrl',function($scope,posts){
 
-      $scope.posts = posts.posts;
+  app.controller('mainCtrl',['$scope','posts',function($scope,posts){
+
+      posts.posts =  $scope.posts ;
       $scope.posts =[
         {title: 'post 1', upvotes: 5},
         {title: 'post 2', upvotes: 2},
@@ -32,6 +34,7 @@ var app = angular.module('flapperNews',['ui.router']);
         {title: 'post 4', upvotes: 9},
         {title: 'post 5', upvotes: 4}
       ];
+      console.log(posts.posts);
       $scope.message= "welcomeeeeeeeeeeee";
       $scope.addPost = function(){
         if(!$scope.title || $scope.title === '') return;
@@ -51,20 +54,22 @@ var app = angular.module('flapperNews',['ui.router']);
       $scope.upVote = function(post){
         post.upvotes +=1;
       };
-  });
-  app.controller('postsCtrl',['posts','$stateParams','$scope',function($scope,$stateParams,posts){
+  }]);
+  app.controller('postsCtrl',['$scope','$stateParams','posts',function($scope,$stateParams,posts){
+  //  console.log($stateParams.id);
     $scope.post = posts.posts[$stateParams.id];
     console.log($scope.post);
     $scope.mes = "heeeeeeeeeellllllllllllo";
     $scope.addComment = function(){
     //  if($scope.body==='') return;
-      alert('hi');
-        $scope.comments.push({
+
+        $scope.post.comments.push({
           author: 'user',
-          body: 'cool comment',
+          body: $scope.body,
           upvotes : 9
         });
+          $scope.body='';
     };
-    $scope.body='';
+
 
   }]);
